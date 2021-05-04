@@ -1,0 +1,31 @@
+name: BuildOSX
+
+on:
+  workflow_dispatch
+
+jobs:
+  build_wheels:
+    name: Build wheels on ${{ matrix.os }}
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        os: [macOS-10.15]
+
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Build LLVM and Atheris
+        run: |
+          git clone https://github.com/llvm/llvm-project.git
+          cd llvm-project
+          mkdir build
+          cd build
+          cmake -DLLVM_ENABLE_PROJECTS='clang;compiler-rt' -G "Unix Makefiles" ../llvm
+          make -j 10
+          export CLANG_BIN="$(pwd)/bin/clang"
+          cd ../..
+          python3 setup.py bdist_wheel
+
+      - uses: actions/upload-artifact@v2
+        with:
+          path: ./dist/*.whl
