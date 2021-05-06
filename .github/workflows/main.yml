@@ -22,10 +22,12 @@ jobs:
           cd build
           cmake -DLLVM_ENABLE_PROJECTS='clang;compiler-rt' -G "Unix Makefiles" ../llvm
           make -j 10
-          export CLANG_BIN="$(pwd)/bin/clang"
+          echo "CLANG_BIN=$(pwd)/bin/clang" >> $GITHUB_ENV
           cd ../..
-          python3 setup.py bdist_wheel
+
+      - name: Build wheels
+        uses: joerick/cibuildwheel@v1.11.0
 
       - uses: actions/upload-artifact@v2
         with:
-          path: ./dist/*.whl
+          path: ./wheelhouse/*.whl
