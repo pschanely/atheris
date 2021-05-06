@@ -35,6 +35,8 @@ jobs:
         uses: joerick/cibuildwheel@v1.11.0
         env:
           CIBW_BEFORE_ALL: printenv
+          CIBW_BEFORE_BUILD: printenv
+          CIBW_BUILD_VERBOSITY: 1
           CIBW_BUILD: cp3*
 
       - uses: actions/upload-artifact@v2
