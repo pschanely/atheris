@@ -22,11 +22,14 @@ jobs:
           cd build
           cmake -DLLVM_ENABLE_PROJECTS='clang;compiler-rt' -G "Unix Makefiles" ../llvm
           make -j 10
+          rm -rf lib
           echo "CLANG_BIN=$(pwd)/bin/clang" >> $GITHUB_ENV
           cd ../..
 
       - name: Build wheels
         uses: joerick/cibuildwheel@v1.11.0
+        env:
+          CIBW_BUILD: cp3*
 
       - uses: actions/upload-artifact@v2
         with:
